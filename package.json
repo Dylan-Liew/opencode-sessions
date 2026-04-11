@@ -1,0 +1,48 @@
+{
+  "name": "oc-sessions",
+  "version": "0.1.0",
+  "description": "A CLI for listing, inspecting, resuming, and deleting OpenCode sessions from the local session database.",
+  "type": "module",
+  "bin": {
+    "oc": "bin/oc.js"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dylan-Liew/oc-sessions.git"
+  },
+  "homepage": "https://github.com/Dylan-Liew/oc-sessions#readme",
+  "bugs": {
+    "url": "https://github.com/Dylan-Liew/oc-sessions/issues"
+  },
+  "keywords": [
+    "opencode",
+    "cli",
+    "sessions",
+    "sqlite"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc --noEmit -p tsconfig.json",
+    "prepare": "npm run build",
+    "start": "node ./dist/cli/index.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.8.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^24.5.2",
+    "typescript": "^5.9.2"
+  }
+}
