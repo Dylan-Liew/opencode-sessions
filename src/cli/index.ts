@@ -1,22 +1,12 @@
 import process from "node:process";
 import { fail } from "../lib/errors.js";
-import { ensureOpencodeAvailable } from "../services/opencode.js";
-import { runDeleteCommand } from "./commands/delete.js";
-import { runListCommand } from "./commands/list.js";
-import { runNewCommand } from "./commands/new.js";
-import { runResumeCommand } from "./commands/resume.js";
-import { runViewCommand } from "./commands/view.js";
 
 const USAGE = `Usage:
   oc new <title> [prompt...]
   oc list
-  oc ls
   oc view <session>
-  oc v <session>
   oc resume [session]
-  oc r [session]
   oc delete <session>
-  oc d <session>
 
 Commands:
   new       Start a new titled OpenCode session
@@ -36,8 +26,6 @@ function usageError(): never {
 }
 
 export async function main(argv = process.argv.slice(2)): Promise<void> {
-  ensureOpencodeAvailable();
-
   const [command, ...rest] = argv;
 
   if (!command) {
@@ -50,6 +38,7 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
         usageError();
       }
 
+      const { runNewCommand } = await import("./commands/new.js");
       runNewCommand(rest);
       return;
     case "list":
@@ -58,7 +47,8 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
         usageError();
       }
 
-      runListCommand();
+      const { runListCommand } = await import("./commands/list.js");
+      await runListCommand();
       return;
     case "view":
     case "v":
@@ -66,7 +56,8 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
         usageError();
       }
 
-      runViewCommand(rest[0]);
+      const { runViewCommand } = await import("./commands/view.js");
+      await runViewCommand(rest[0]);
       return;
     case "resume":
     case "r":
@@ -74,6 +65,7 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
         usageError();
       }
 
+      const { runResumeCommand } = await import("./commands/resume.js");
       await runResumeCommand(rest[0]);
       return;
     case "delete":
@@ -82,6 +74,7 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
         usageError();
       }
 
+      const { runDeleteCommand } = await import("./commands/delete.js");
       await runDeleteCommand(rest[0]);
       return;
     case "help":

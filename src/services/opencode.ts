@@ -2,6 +2,14 @@ import { spawnSync } from "node:child_process";
 import process from "node:process";
 import { fail } from "../lib/errors.js";
 
+function failForSpawnError(error: Error): never {
+  if ("code" in error && error.code === "ENOENT") {
+    fail("Missing required command: opencode");
+  }
+
+  fail(`Failed to run opencode: ${error.message}`);
+}
+
 export function ensureOpencodeAvailable(): void {
   const result = spawnSync("opencode", ["--version"], {
     stdio: "ignore",
@@ -19,7 +27,7 @@ export function readOpencode(parts: string[]): string {
   });
 
   if (result.error) {
-    fail(`Failed to run opencode: ${result.error.message}`);
+    failForSpawnError(result.error);
   }
 
   if (result.status !== 0) {
@@ -37,7 +45,7 @@ export function runOpencodeWithStatus(parts: string[], cwd: string): number {
   });
 
   if (result.error) {
-    fail(`Failed to run opencode: ${result.error.message}`);
+    failForSpawnError(result.error);
   }
 
   return result.status ?? 1;

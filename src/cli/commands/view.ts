@@ -1,7 +1,6 @@
 import process from "node:process";
 import { fail } from "../../lib/errors.js";
 import { formatKeyValue, formatSection, printable, truncateInline } from "../../output/format.js";
-import { renderViewInk } from "../../output/ink.js";
 import { formatTable } from "../../output/table.js";
 import {
   getRecentTextParts,
@@ -11,7 +10,7 @@ import {
   resolveSessionId,
 } from "../../services/sessions.js";
 
-export function runViewCommand(input: string): void {
+export async function runViewCommand(input: string): Promise<void> {
   const db = openSessionStore();
 
   try {
@@ -26,6 +25,8 @@ export function runViewCommand(input: string): void {
     const recentParts = getRecentTextParts(db, id);
 
     if (process.stdout.isTTY) {
+      // Lazy-load Ink only when needed for TTY output
+      const { renderViewInk } = await import("../../output/ink.js");
       process.stdout.write(renderViewInk(session, counts, recentParts));
       return;
     }

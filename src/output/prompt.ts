@@ -1,10 +1,22 @@
 import readline from "node:readline/promises";
 import process from "node:process";
 import { rankFuzzy } from "../lib/fuzzy.js";
-import { confirmInk, selectWithSearchInk } from "./ink.js";
+
+type PromptInkModule = Pick<typeof import("./ink.js"), "confirmInk" | "selectWithSearchInk">;
+
+let promptInkModulePromise: Promise<PromptInkModule> | undefined;
+
+async function loadPromptInkModule(): Promise<PromptInkModule> {
+  if (!promptInkModulePromise) {
+    promptInkModulePromise = import("./ink.js");
+  }
+
+  return promptInkModulePromise;
+}
 
 export async function confirm(message: string): Promise<boolean> {
   if (process.stdout.isTTY && process.stdin.isTTY) {
+    const { confirmInk } = await loadPromptInkModule();
     return confirmInk(message);
   }
 
@@ -63,6 +75,7 @@ export async function selectWithSearch(
   options: { initialPrompt?: string; maxVisible?: number } = {},
 ): Promise<number | null> {
   if (process.stdout.isTTY && process.stdin.isTTY) {
+    const { selectWithSearchInk } = await loadPromptInkModule();
     return selectWithSearchInk(choices, { maxVisible: options.maxVisible });
   }
 

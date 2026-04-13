@@ -48,14 +48,12 @@ node ./dist/cli/index.js list
 ```text
 oc new <title> [prompt...]
 oc list
-oc ls
 oc view <session>
-oc v <session>
 oc resume [session]
-oc r [session]
 oc delete <session>
-oc d <session>
 ```
+
+Aliases: `oc ls` → `oc list`, `oc v` → `oc view`, `oc r` → `oc resume`, `oc d` → `oc delete`.
 
 `oc new` launches the full OpenCode TUI (`opencode --prompt ...`) so the session is interactive from the start.
 When interactive prompts are needed, use arrow keys and Enter in the Ink UI (Esc cancels).
