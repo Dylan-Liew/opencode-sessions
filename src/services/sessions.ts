@@ -104,7 +104,7 @@ export function resolveSessionId(
     }
 
     if (titleMatches.length > 1) {
-      fail(`Session title is ambiguous: ${input}\n${titleMatches.map((row) => row.id).join("\n")}`);
+      fail(`! Session title is ambiguous: ${input}\n\n${titleMatches.map((row) => row.id).join("\n")}`);
     }
   }
 
@@ -124,12 +124,12 @@ export function resolveSessionId(
 
     if (fuzzyMatches.length > 0) {
       fail(
-        `Session not found: ${input}\n` +
+        `! Session not found: ${input}\n\n` +
           `Closest matches:\n${fuzzyMatches.map((row) => `${row.sessionId}\t${row.title}`).join("\n")}`,
       );
     }
 
-    fail(`Session not found: ${input}`);
+    fail(`! Session not found: ${input}`);
   }
 
   if (prefixMatches.length > 1) {
@@ -139,7 +139,7 @@ export function resolveSessionId(
         ? fuzzyMatches.map((row) => `${row.sessionId}\t${row.title}`).join("\n")
         : prefixMatches.map((row) => row.id).join("\n");
 
-    fail(`Session prefix is ambiguous: ${input}\n${lines}`);
+    fail(`! Session prefix is ambiguous: ${input}\n\n${lines}`);
   }
 
   return prefixMatches[0].id;
