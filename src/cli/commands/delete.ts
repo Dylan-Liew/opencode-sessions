@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import type { CommandModule } from "yargs";
 import { fail } from "../../lib/errors.js";
 import { confirm } from "../../output/prompt.js";
 import { runOpencode } from "../../services/opencode.js";
@@ -40,3 +41,17 @@ export async function runDeleteCommand(input: string): Promise<void> {
     }
   }
 }
+
+export const deleteCommand: CommandModule = {
+  command: "delete <session>",
+  aliases: ["d"],
+  describe: "Delete the session via opencode after confirmation",
+  builder: (yargs) =>
+    yargs.positional("session", {
+      describe: "Session ID, unique prefix, or title",
+      type: "string",
+    }),
+  handler: async (argv) => {
+    await runDeleteCommand(String((argv as { session?: unknown }).session ?? ""));
+  },
+};

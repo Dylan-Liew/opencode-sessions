@@ -23,14 +23,20 @@ jobs:
           node-version: "24"
           registry-url: https://registry.npmjs.org
 
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
       - name: Install dependencies
         run: npm ci
 
       - name: Build
-        run: npm run build --if-present
+        run: npm run build
 
       - name: Test
-        run: npm test --if-present
+        run: npm test
+
+      - name: Smoke test published entrypoint
+        run: node ./dist/cli/index.js --help
 
       - name: Publish to npm
         run: npm publish --provenance --access public --verbose

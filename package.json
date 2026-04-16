@@ -12,7 +12,7 @@
     "README.md"
   ],
   "engines": {
-    "node": ">=18"
+    "node": "^20.19.0 || ^22.12.0 || >=23"
   },
   "repository": {
     "type": "git",
@@ -37,14 +37,17 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "npm run build",
-    "start": "node ./dist/cli/index.js"
+    "start": "node ./dist/cli/index.js",
+    "test": "bun run build && bun test"
   },
   "dependencies": {
-    "better-sqlite3": "^12.8.0"
+    "better-sqlite3": "^12.8.0",
+    "yargs": "^18.0.0"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^24.5.2",
+    "@types/yargs": "^17.0.35",
     "prettier": "^3.6.2",
     "typescript": "^5.9.2"
   }

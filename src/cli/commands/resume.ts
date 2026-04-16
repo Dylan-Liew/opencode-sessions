@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import process from "node:process";
+import type { CommandModule } from "yargs";
 import { fail } from "../../lib/errors.js";
 import { sanitizeInline } from "../../output/format.js";
 import { selectWithSearch } from "../../output/prompt.js";
@@ -55,6 +56,21 @@ async function resolveResumeIdFromCurrentDirectory(): Promise<string> {
     db.close();
   }
 }
+
+export const resumeCommand: CommandModule = {
+  command: "resume [session]",
+  aliases: ["r"],
+  describe: "Launch opencode in the session directory",
+  builder: (yargs) =>
+    yargs.positional("session", {
+      describe: "Session ID, unique prefix, or title",
+      type: "string",
+    }),
+  handler: async (argv) => {
+    const session = (argv as { session?: unknown }).session;
+    await runResumeCommand(typeof session === "string" ? session : undefined);
+  },
+};
 
 export async function runResumeCommand(input?: string): Promise<void> {
   const resolvedId = input

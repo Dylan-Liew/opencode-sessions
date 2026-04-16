@@ -1,4 +1,5 @@
 import process from "node:process";
+import type { CommandModule } from "yargs";
 import { fail } from "../../lib/errors.js";
 import { runOpencodeWithStatus } from "../../services/opencode.js";
 import {
@@ -22,7 +23,9 @@ function applyTitleToLatestTouchedSession(directory: string, title: string, sinc
   const sessionId = getLatestTouchedSessionId(directory, sinceMs);
 
   if (!sessionId) {
-    process.stderr.write(`Warning: could not determine latest session to apply title "${title}".\n`);
+    process.stderr.write(
+      `Warning: could not determine latest session to apply title "${title}".\n`,
+    );
     return;
   }
 
@@ -57,3 +60,24 @@ export function runNewCommand(args: string[]): never {
 
   process.exit(exitCode);
 }
+
+export const newCommand: CommandModule = {
+  command: "new <title> <prompt...>",
+  describe: "Start a new titled OpenCode session",
+  builder: (yargs) =>
+    yargs
+      .positional("title", {
+        describe: "Title to apply to the newly created session",
+        type: "string",
+      })
+      .positional("prompt", {
+        describe: "Prompt to send to OpenCode",
+        type: "string",
+        array: true,
+      }),
+  handler: (argv) => {
+    const { prompt, title } = argv as { prompt?: unknown; title?: unknown };
+    const promptParts = Array.isArray(prompt) ? prompt.map(String) : [String(prompt ?? "")];
+    runNewCommand([String(title ?? ""), ...promptParts]);
+  },
+};

@@ -1,3 +1,4 @@
+import type { CommandModule } from "yargs";
 import { sanitizeInline } from "../../output/format.js";
 import { formatTable } from "../../output/table.js";
 import { listRootSessions, openSessionStore } from "../../services/sessions.js";
@@ -22,3 +23,12 @@ export function runListCommand(): void {
     db.close();
   }
 }
+
+export const listCommand: CommandModule = {
+  command: "list",
+  aliases: ["ls"],
+  describe: "List root sessions across all projects",
+  handler: () => {
+    runListCommand();
+  },
+};

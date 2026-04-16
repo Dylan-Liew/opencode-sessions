@@ -1,4 +1,5 @@
 import process from "node:process";
+import type { CommandModule } from "yargs";
 import { fail } from "../../lib/errors.js";
 import { formatKeyValue, formatSection, printable, truncateInline } from "../../output/format.js";
 import { formatTable } from "../../output/table.js";
@@ -62,3 +63,17 @@ export async function runViewCommand(input: string): Promise<void> {
     db.close();
   }
 }
+
+export const viewCommand: CommandModule = {
+  command: "view <session>",
+  aliases: ["v"],
+  describe: "Show session metadata and recent text parts",
+  builder: (yargs) =>
+    yargs.positional("session", {
+      describe: "Session ID, unique prefix, or title",
+      type: "string",
+    }),
+  handler: async (argv) => {
+    await runViewCommand(String((argv as { session?: unknown }).session ?? ""));
+  },
+};

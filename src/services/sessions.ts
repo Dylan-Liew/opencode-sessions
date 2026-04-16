@@ -104,7 +104,9 @@ export function resolveSessionId(
     }
 
     if (titleMatches.length > 1) {
-      fail(`! Session title is ambiguous: ${input}\n\n${titleMatches.map((row) => row.id).join("\n")}`);
+      fail(
+        `! Session title is ambiguous: ${input}\n\n${titleMatches.map((row) => row.id).join("\n")}`,
+      );
     }
 
     const titlePrefixMatches = db
